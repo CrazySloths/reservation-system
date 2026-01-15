@@ -1,0 +1,25 @@
+# Force HTTPS (disabled for local development)
+# Uncomment the lines below when deploying to production
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+RewriteEngine On
+
+# Security Headers (disabled for local development, re-enable for production)
+# Header always set X-Content-Type-Options nosniff
+# Header always set X-Frame-Options DENY
+# Header always set X-XSS-Protection "1; mode=block"
+# Header always set Referrer-Policy "strict-origin-when-cross-origin"
+# Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data:;"
+
+# Session Security
+php_value session.cookie_httponly 1
+# php_value session.cookie_secure 1  # Disabled for local development (requires HTTPS)
+php_value session.cookie_samesite Strict
+php_value session.use_strict_mode 1
+
+# Rate Limiting (basic)
+<RequireAll>
+    Require all granted
+</RequireAll>

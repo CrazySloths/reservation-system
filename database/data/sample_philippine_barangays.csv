@@ -1,0 +1,18 @@
+region_code,region_name,province_code,province_name,city_code,city_name,district_number,district_name,barangay_name,barangay_alternate_name,zip_code
+NCR,National Capital Region,NCR,Metro Manila,MNL,Manila,1,District 1,Binondo,Chinatown,1006
+NCR,National Capital Region,NCR,Metro Manila,MNL,Manila,1,District 1,Tondo I,Tondo District I,1013
+NCR,National Capital Region,NCR,Metro Manila,MNL,Manila,2,District 2,Intramuros,Walled City,1002
+NCR,National Capital Region,NCR,Metro Manila,MNL,Manila,2,District 2,Quiapo,,1001
+NCR,National Capital Region,NCR,Metro Manila,MNL,Manila,3,District 3,Ermita,Robinsons Place,1000
+NCR,National Capital Region,NCR,Metro Manila,MNL,Manila,3,District 3,Malate,Remedios Circle,1004
+NCR,National Capital Region,NCR,Metro Manila,QC,Quezon City,1,District 1,Alicia,Bago Bantay,1105
+NCR,National Capital Region,NCR,Metro Manila,QC,Quezon City,1,District 1,Bagong Pag-asa,North-EDSA,1105
+NCR,National Capital Region,NCR,Metro Manila,QC,Quezon City,2,District 2,Bagong Silangan,Payatas,1119
+NCR,National Capital Region,NCR,Metro Manila,QC,Quezon City,2,District 2,Commonwealth,Litex,1121
+NCR,National Capital Region,NCR,Metro Manila,MAK,Makati,1,District 1,Forbes Park,,1220
+NCR,National Capital Region,NCR,Metro Manila,MAK,Makati,1,District 1,Poblacion,Makati CBD,1210
+NCR,National Capital Region,NCR,Metro Manila,MAK,Makati,1,District 1,Bel-Air,,1209
+NCR,National Capital Region,NCR,Metro Manila,PAC,Pasig,1,District 1,Kapitolyo,,1603
+NCR,National Capital Region,NCR,Metro Manila,PAC,Pasig,1,District 1,Ugong,Ortigas,1604
+NCR,National Capital Region,NCR,Metro Manila,PAC,Pasig,2,District 2,Santolan,,1610
+

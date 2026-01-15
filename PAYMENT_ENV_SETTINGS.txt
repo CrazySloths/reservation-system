@@ -1,0 +1,57 @@
+# ===================================
+# PAYMENT CONFIGURATION FOR .ENV FILE
+# ===================================
+# Copy these lines to your .env file
+
+# Test Mode (set to false for production)
+PAYMENT_TEST_MODE=true
+PAYMENT_DEADLINE_HOURS=48
+
+# PayMongo Integration (leave empty until API key arrives)
+PAYMONGO_ENABLED=false
+PAYMONGO_SECRET_KEY=
+PAYMONGO_PUBLIC_KEY=
+
+# GCash Configuration
+GCASH_ENABLED=true
+GCASH_ACCOUNT_NUMBER=09171234567
+GCASH_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# Maya (PayMaya) Configuration  
+MAYA_ENABLED=true
+MAYA_ACCOUNT_NUMBER=09171234567
+MAYA_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# BPI Configuration
+BPI_ENABLED=true
+BPI_ACCOUNT_NUMBER="0000-0000-00"
+BPI_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# BDO Configuration
+BDO_ENABLED=true
+BDO_ACCOUNT_NUMBER="0000-0000-00"
+BDO_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# Metrobank Configuration
+METROBANK_ENABLED=true
+METROBANK_ACCOUNT_NUMBER="0000-0000-00"
+METROBANK_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# UnionBank Configuration
+UNIONBANK_ENABLED=true
+UNIONBANK_ACCOUNT_NUMBER="0000-0000-00"
+UNIONBANK_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# Landbank Configuration
+LANDBANK_ENABLED=true
+LANDBANK_ACCOUNT_NUMBER="0000-0000-00"
+LANDBANK_ACCOUNT_NAME="LGU-1 Treasurer's Office"
+
+# ===================================
+# INSTRUCTIONS:
+# 1. Copy these settings to your .env file
+# 2. Update account numbers with real LGU accounts
+# 3. Set PAYMENT_TEST_MODE=false for production
+# 4. Disable unused channels by setting enabled=false
+# ===================================
+

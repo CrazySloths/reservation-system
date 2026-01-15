@@ -1,0 +1,197 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    /* LGU1 Brand Colors */
+    --color-lgu-primary: #00473e;
+    --color-lgu-secondary: #faae2b;
+    --color-lgu-light: #f2f7f5;
+    --color-lgu-white: #ffffff;
+    
+    /* Sidebar specific colors */
+    --color-lgu-bg: #f2f7f5;
+    --color-lgu-headline: #00473e;
+    --color-lgu-paragraph: #475d5b;
+    --color-lgu-button: #faae2b;
+    --color-lgu-button-text: #00473e;
+    --color-lgu-stroke: #00332c;
+    --color-lgu-main: #f2f7f5;
+    --color-lgu-highlight: #faae2b;
+    --color-lgu-tertiary: #fa5246;
+    
+    /* Typography */
+    --font-sans: 'Poppins', 'Inter', 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-poppins: 'Poppins', var(--font-sans);
+    
+    /* Golden Ratio Typography Scale (φ = 1.618) */
+    --font-size-hero: 64px;
+    --font-size-display: 52px;
+    --font-size-h1: 40px;
+    --font-size-h2: 32px;
+    --font-size-h3: 24px;
+    --font-size-body-lg: 18px;
+    --font-size-body: 16px;
+    --font-size-small: 14px;
+    --font-size-caption: 12px;
+    
+    /* Golden Ratio Spacing Scale (Fibonacci) */
+    --spacing-gr-xs: 8px;
+    --spacing-gr-sm: 13px;
+    --spacing-gr-md: 21px;
+    --spacing-gr-lg: 34px;
+    --spacing-gr-xl: 55px;
+    --spacing-gr-2xl: 89px;
+    --spacing-gr-3xl: 144px;
+}
+
+/* Global Interactive Elements - Cursor Styles */
+button,
+[type="button"],
+[type="submit"],
+[type="reset"],
+a[href],
+label[for],
+select,
+[role="button"],
+.cursor-pointer {
+    cursor: pointer;
+}
+
+/* Disabled states should show not-allowed cursor */
+button:disabled,
+[type="button"]:disabled,
+[type="submit"]:disabled,
+[type="reset"]:disabled,
+select:disabled,
+[disabled] {
+    cursor: not-allowed;
+}
+
+/* Input fields should show text cursor */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+textarea {
+    cursor: text;
+}
+
+/* Golden Ratio Utility Classes */
+@utility text-hero {
+    font-size: 64px;
+    line-height: 1.1;
+    font-weight: 700;
+}
+
+@utility text-h1 {
+    font-size: 40px;
+    line-height: 1.2;
+    font-weight: 700;
+}
+
+@utility text-h2 {
+    font-size: 32px;
+    line-height: 1.3;
+    font-weight: 600;
+}
+
+@utility text-h3 {
+    font-size: 24px;
+    line-height: 1.4;
+    font-weight: 600;
+}
+
+@utility text-body-lg {
+    font-size: 18px;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+@utility text-body {
+    font-size: 16px;
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+@utility text-small {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+@utility text-caption {
+    font-size: 12px;
+    line-height: 1.4;
+    font-weight: 400;
+}
+
+/* Golden Ratio Spacing - Padding */
+@utility p-gr-xs { padding: 8px; }
+@utility p-gr-sm { padding: 13px; }
+@utility p-gr-md { padding: 21px; }
+@utility p-gr-lg { padding: 34px; }
+@utility p-gr-xl { padding: 55px; }
+
+@utility px-gr-xs { padding-left: 8px; padding-right: 8px; }
+@utility px-gr-sm { padding-left: 13px; padding-right: 13px; }
+@utility px-gr-md { padding-left: 21px; padding-right: 21px; }
+@utility px-gr-lg { padding-left: 34px; padding-right: 34px; }
+@utility px-gr-xl { padding-left: 55px; padding-right: 55px; }
+
+@utility py-gr-xs { padding-top: 8px; padding-bottom: 8px; }
+@utility py-gr-sm { padding-top: 13px; padding-bottom: 13px; }
+@utility py-gr-md { padding-top: 21px; padding-bottom: 21px; }
+@utility py-gr-lg { padding-top: 34px; padding-bottom: 34px; }
+@utility py-gr-xl { padding-top: 55px; padding-bottom: 55px; }
+
+/* Golden Ratio Spacing - Margin */
+@utility mb-gr-xs { margin-bottom: 8px; }
+@utility mb-gr-sm { margin-bottom: 13px; }
+@utility mb-gr-md { margin-bottom: 21px; }
+@utility mb-gr-lg { margin-bottom: 34px; }
+@utility mb-gr-xl { margin-bottom: 55px; }
+
+@utility ml-gr-sm { margin-left: 13px; }
+@utility ml-gr-md { margin-left: 21px; }
+
+/* Golden Ratio Spacing - Gap */
+@utility gap-gr-xs { gap: 8px; }
+@utility gap-gr-sm { gap: 13px; }
+@utility gap-gr-md { gap: 21px; }
+@utility gap-gr-lg { gap: 34px; }
+@utility gap-gr-xl { gap: 55px; }
+
+/* Golden Ratio Spacing - Space (using custom CSS since @utility doesn't support child selectors) */
+.space-x-gr-sm > * + * { margin-left: 13px; }
+.space-x-gr-md > * + * { margin-left: 21px; }
+
+.space-y-gr-xs > * + * { margin-top: 8px; }
+.space-y-gr-sm > * + * { margin-top: 13px; }
+.space-y-gr-md > * + * { margin-top: 21px; }
+.space-y-gr-lg > * + * { margin-top: 34px; }
+.space-y-gr-xl > * + * { margin-top: 55px; }
+
+/* Button Styles (Following PROJECT_DESIGN_RULES.md) */
+.btn-primary {
+    @apply px-6 py-3 bg-lgu-button text-lgu-button-text font-semibold rounded-lg hover:opacity-90 transition inline-flex items-center;
+}
+
+.btn-secondary {
+    @apply px-6 py-3 border-2 border-lgu-stroke text-lgu-headline font-semibold rounded-lg hover:bg-lgu-bg transition inline-flex items-center;
+}
+
+.btn-danger {
+    @apply px-6 py-3 bg-lgu-tertiary text-white font-semibold rounded-lg hover:opacity-90 transition inline-flex items-center;
+}
+
+/* Input Field Styles */
+.input-field {
+    @apply w-full px-4 py-3 border-2 border-lgu-stroke rounded-lg focus:border-lgu-highlight focus:outline-none text-lgu-paragraph;
+}

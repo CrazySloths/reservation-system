@@ -1,0 +1,49 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Install dependencies
+        run: composer install --no-dev --optimize-autoloader
+
+      - name: Create deployment package
+        run: |
+          mkdir -p deploy
+          rsync -av --exclude='.git' --exclude='.github' --exclude='test' --exclude='docs' --exclude='backup' . deploy/
+          cd deploy && zip -r ../deployment.zip .
+
+      - name: Deploy via FTP
+        if: ${{ secrets.FTP_SERVER != '' }}
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./deploy/
+          server-dir: /public_html/
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/test/**
+            **/docs/**
+            **/backup/**
+      
+      - name: Deployment Status
+        if: ${{ secrets.FTP_SERVER == '' }}
+        run: echo "FTP deployment skipped - configure FTP_SERVER, FTP_USERNAME, FTP_PASSWORD secrets to enable"
