@@ -1,3 +1,0 @@
-http://localhost/LGU1-HousingAndResettlementManagement/public/dashboard.php
-
-http://localhost/LGU1-HousingAndResettlementManagement/api/

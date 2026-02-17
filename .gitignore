@@ -22,3 +22,20 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# SQL dumps
+*.sql
+!/database/migrations/**
+
+# Compiled views and sessions (runtime cache)
+/storage/framework/views/*
+/storage/framework/sessions/*
+!/storage/framework/views/.gitkeep
+!/storage/framework/sessions/.gitkeep
+
+# Uploaded files (runtime data)
+/public/uploads/ids/*
+!/public/uploads/ids/.gitkeep
+
+# Exported reports
+*.csv
