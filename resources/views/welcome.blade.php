@@ -302,20 +302,7 @@
     <script>
 
         // Modals Script — built dynamically from DB
-        const facilitiesData = @json($facilities->mapWithKeys(function($facility) {
-            $photos = $facility->relationLoaded('photos') ? $facility->photos : collect();
-            $photo = $photos->where('is_primary', true)->first() ?? $photos->first();
-            return [$facility->id => [
-                'title' => $facility->facility_name,
-                'location' => $facility->location->location_name ?? 'N/A',
-                'capacity' => number_format($facility->capacity) . ' pax',
-                'rate' => $facility->base_rate_3hrs ? '₱' . number_format($facility->base_rate_3hrs, 2) : 'N/A',
-                'extRate' => $facility->hourly_rate ? '₱' . number_format($facility->hourly_rate, 2) . '/hr' : 'N/A',
-                'hours' => $facility->min_booking_hours ? $facility->min_booking_hours . ' Hours' : '3 Hours',
-                'img' => $photo ? asset($photo->photo_path) : null,
-                'desc' => $facility->description ?? 'No description available.',
-            ]];
-        }));
+        const facilitiesData = {!! $facilitiesJson !!};
 
         const loginUrl = "{{ route('login') }}";
 

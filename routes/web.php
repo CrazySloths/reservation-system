@@ -28,17 +28,37 @@ use App\Http\Controllers\Admin\SystemSettingsController;
 //})->name('login');
 
 Route::get('/', function () {
-    $facilities = \App\Models\Facility::with(['location'])
-        ->active()
-        ->ordered()
-        ->get();
-    // Try to load photos if the table exists
     try {
-        $facilities->load('photos');
-    } catch (\Exception $e) {
-        // facility_photos table may not exist yet
+        $facilities = \App\Models\Facility::with(['location'])
+            ->active()
+            ->ordered()
+            ->get();
+        try { $facilities->load('photos'); } catch (\Throwable $e) {}
+    } catch (\Throwable $e) {
+        $facilities = collect();
     }
-    return view('welcome', compact('facilities'));
+
+    // Pre-build modal data safely so blade rendering can't crash
+    $facilitiesJson = $facilities->mapWithKeys(function($facility) {
+        try {
+            $photos = $facility->relationLoaded('photos') ? $facility->photos : collect();
+            $photo = $photos->where('is_primary', true)->first() ?? $photos->first();
+            return [$facility->id => [
+                'title' => $facility->facility_name ?? 'Unnamed Facility',
+                'location' => $facility->location?->location_name ?? 'N/A',
+                'capacity' => number_format((int)($facility->capacity ?? 0)) . ' pax',
+                'rate' => $facility->base_rate_3hrs ? '₱' . number_format((float)$facility->base_rate_3hrs, 2) : 'N/A',
+                'extRate' => $facility->hourly_rate ? '₱' . number_format((float)$facility->hourly_rate, 2) . '/hr' : 'N/A',
+                'hours' => $facility->min_booking_hours ? $facility->min_booking_hours . ' Hours' : '3 Hours',
+                'img' => $photo ? asset($photo->photo_path) : null,
+                'desc' => $facility->description ?? 'No description available.',
+            ]];
+        } catch (\Throwable $e) {
+            return [];
+        }
+    })->toJson();
+
+    return view('welcome', compact('facilities', 'facilitiesJson'));
 })->name('welcome');
 
 // Storage file access route (for shared hosting where /storage/ conflicts with real directory)
