@@ -11,6 +11,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <style>
         html {
@@ -76,6 +77,41 @@
             opacity: 1;
             pointer-events: auto;
             transform: translateY(0);
+        }
+
+        .facility-swal-popup {
+            border-radius: 2rem !important;
+            overflow: hidden !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .facility-swal-close {
+            color: rgba(255, 255, 255, 0.5) !important;
+            font-size: 1.75rem !important;
+            top: 0.75rem !important;
+            right: 0.75rem !important;
+            z-index: 10 !important;
+            background: rgba(0, 0, 0, 0.4) !important;
+            border-radius: 50% !important;
+            width: 36px !important;
+            height: 36px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+        }
+
+        .facility-swal-close:hover {
+            color: #fff !important;
+            background: rgba(0, 0, 0, 0.6) !important;
+        }
+
+        @media (max-width: 640px) {
+            .facility-swal-popup {
+                border-radius: 1.5rem !important;
+            }
+            .facility-swal-popup div[style*="grid-template-columns"] {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>
@@ -215,61 +251,6 @@
             </div>
         </section>
 
-        <!-- Modal Cards -->
-
-        <div id="facilityModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4">
-            <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-md" onclick="closeModal()"></div>
-            <div
-                class="relative bg-slate-900 border border-white/10 w-full max-w-2xl rounded-[3rem] overflow-hidden shadow-2xl transform transition-all">
-                <button onclick="closeModal()" class="absolute top-6 right-6 text-white/50 hover:text-white z-10">
-                    <i data-lucide="x"></i>
-                </button>
-
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="h-64 md:h-auto overflow-hidden">
-                        <img id="modalImg" src="" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-8 md:p-10 space-y-6">
-                        <div>
-                            <h2 id="modalTitle" class="text-3xl font-black text-white"></h2>
-                            <p id="modalLocation"
-                                class="text-orange-500 font-bold text-sm flex items-center gap-2 mt-1"></p>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                                <span class="text-[10px] uppercase font-black text-white/40 block mb-1">Capacity</span>
-                                <span id="modalCapacity" class="text-lg font-bold"></span>
-                            </div>
-                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                                <span class="text-[10px] uppercase font-black text-white/40 block mb-1">Base
-                                    Hours</span>
-                                <span id="modalHours" class="text-lg font-bold"></span>
-                            </div>
-                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                                <span class="text-[10px] uppercase font-black text-white/40 block mb-1">Base Rate</span>
-                                <span id="modalRate" class="text-lg font-bold text-orange-400"></span>
-                            </div>
-                            <div class="bg-white/5 p-4 rounded-2xl border border-white/5">
-                                <span class="text-[10px] uppercase font-black text-white/40 block mb-1">Ext. Rate</span>
-                                <span id="modalExtRate" class="text-lg font-bold"></span>
-                            </div>
-                        </div>
-
-                        <div>
-                            <span
-                                class="text-[10px] uppercase font-black text-white/40 block mb-2 tracking-widest">Description</span>
-                            <p id="modalDesc" class="text-white/70 text-sm leading-relaxed"></p>
-                        </div>
-
-                        <a href="{{ route('login') }}"
-                            class="block w-full bg-orange-600 text-center py-4 rounded-xl font-bold hover:bg-orange-700 transition">RESERVE
-                            NOW</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
 
 
         <section id="contact" class="py-32 bg-black/40 backdrop-blur-3xl border-t border-white/5">
@@ -373,29 +354,68 @@
             }
         };
 
+        const loginUrl = "{{ route('login') }}";
+
         function openFacilityModal(key) {
             const data = facilitiesData[key];
-            document.getElementById('modalTitle').innerText = data.title;
-            document.getElementById('modalLocation').innerHTML = `<i data-lucide="map-pin" class="w-4 h-4"></i> ${data.location}`;
-            document.getElementById('modalCapacity').innerText = data.capacity;
-            document.getElementById('modalRate').innerText = data.rate;
-            document.getElementById('modalExtRate').innerText = data.extRate;
-            document.getElementById('modalHours').innerText = data.hours;
-            document.getElementById('modalDesc').innerText = data.desc;
-            document.getElementById('modalImg').src = data.img;
 
-            const modal = document.getElementById('facilityModal');
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            lucide.createIcons(); // Refresh icons inside modal
-            document.body.style.overflow = 'hidden'; // Prevent scroll
-        }
-
-        function closeModal() {
-            const modal = document.getElementById('facilityModal');
-            modal.classList.add('hidden');
-            modal.classList.remove('flex');
-            document.body.style.overflow = 'auto';
+            Swal.fire({
+                html: `
+                    <div style="display:grid;grid-template-columns:1fr 1fr;text-align:left;gap:0;min-height:380px;">
+                        <div style="overflow:hidden;">
+                            <img src="${data.img}" style="width:100%;height:100%;object-fit:cover;" alt="${data.title}">
+                        </div>
+                        <div style="padding:2rem 2.5rem;display:flex;flex-direction:column;gap:1.25rem;">
+                            <div>
+                                <h2 style="font-size:1.75rem;font-weight:900;color:#fff;margin:0;">${data.title}</h2>
+                                <p style="color:#f97316;font-weight:700;font-size:0.875rem;margin-top:4px;display:flex;align-items:center;gap:6px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                                    ${data.location}
+                                </p>
+                            </div>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+                                <div style="background:rgba(255,255,255,0.05);padding:0.875rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size:10px;text-transform:uppercase;font-weight:900;color:rgba(255,255,255,0.4);display:block;margin-bottom:2px;">Capacity</span>
+                                    <span style="font-size:1.1rem;font-weight:700;color:#fff;">${data.capacity}</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.05);padding:0.875rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size:10px;text-transform:uppercase;font-weight:900;color:rgba(255,255,255,0.4);display:block;margin-bottom:2px;">Base Hours</span>
+                                    <span style="font-size:1.1rem;font-weight:700;color:#fff;">${data.hours}</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.05);padding:0.875rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size:10px;text-transform:uppercase;font-weight:900;color:rgba(255,255,255,0.4);display:block;margin-bottom:2px;">Base Rate</span>
+                                    <span style="font-size:1.1rem;font-weight:700;color:#fb923c;">${data.rate}</span>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.05);padding:0.875rem;border-radius:1rem;border:1px solid rgba(255,255,255,0.05);">
+                                    <span style="font-size:10px;text-transform:uppercase;font-weight:900;color:rgba(255,255,255,0.4);display:block;margin-bottom:2px;">Ext. Rate</span>
+                                    <span style="font-size:1.1rem;font-weight:700;color:#fff;">${data.extRate}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <span style="font-size:10px;text-transform:uppercase;font-weight:900;color:rgba(255,255,255,0.4);display:block;margin-bottom:6px;letter-spacing:0.1em;">Description</span>
+                                <p style="color:rgba(255,255,255,0.7);font-size:0.875rem;line-height:1.6;margin:0;">${data.desc}</p>
+                            </div>
+                            <a href="${loginUrl}" style="display:block;width:100%;background:#ea580c;color:#fff;text-align:center;padding:1rem;border-radius:0.75rem;font-weight:700;text-decoration:none;transition:background 0.2s;margin-top:auto;" onmouseover="this.style.background='#c2410c'" onmouseout="this.style.background='#ea580c'">RESERVE NOW</a>
+                        </div>
+                    </div>
+                `,
+                showConfirmButton: false,
+                showCloseButton: true,
+                background: '#0f172a',
+                color: '#ffffff',
+                width: '700px',
+                padding: 0,
+                customClass: {
+                    popup: 'facility-swal-popup',
+                    closeButton: 'facility-swal-close'
+                },
+                showClass: {
+                    popup: 'animate__animated animate__fadeInUp animate__faster'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutDown animate__faster'
+                }
+            });
         }
 
         lucide.createIcons();
