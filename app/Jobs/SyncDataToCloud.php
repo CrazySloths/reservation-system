@@ -12,12 +12,20 @@ class SyncDataToCloud implements ShouldQueue
 {
     use Queueable;
 
+    /**
+     * Main execution logic for bidirectional synchronization.
+     */
     public function handle(): void
     {
+        // Fetch environment variables
         $baseUrl = rtrim(env('LIVE_SYSTEM_URL'), '/');
         $key = env('SYNC_API_KEY');
         $syncEndpoint = $baseUrl . '/api/sync-data';
 
+        /**
+         * Table Configuration
+         * Note: 'facilities' uses 'facility_id', others use 'id'.
+         */
         $syncConfigs = [
             ['table' => 'users', 'connection' => 'auth_db', 'pk' => 'id'],
             ['table' => 'bookings', 'connection' => 'facilities_db', 'pk' => 'id'],
@@ -28,11 +36,17 @@ class SyncDataToCloud implements ShouldQueue
         ];
 
         foreach ($syncConfigs as $config) {
+            // Task 1: Push local updates to the Cloud
             $this->uploadToCloud($config, $syncEndpoint, $key);
+
+            // Task 2: Pull new data from the Cloud to Local
             $this->downloadFromCloud($config, $syncEndpoint, $key);
         }
     }
 
+    /**
+     * Upload: Send local records where is_synced = 0 to Cloud server.
+     */
     private function uploadToCloud($config, $url, $key)
     {
         $table = $config['table'];
@@ -45,9 +59,8 @@ class SyncDataToCloud implements ShouldQueue
             ->orderBy($pk)
             ->chunk(50, function ($records) use ($table, $url, $key, $conn, $pk) {
                 try {
-                    // Added withoutVerifying() to fix cURL error 77
-                    $response = Http::withoutVerifying() 
-                        ->withHeaders(['X-Sync-Key' => $key])
+                    // Execute POST request
+                    $response = Http::withHeaders(['X-Sync-Key' => $key])
                         ->timeout(120)
                         ->post($url, [
                             'action' => 'upload',
@@ -55,15 +68,16 @@ class SyncDataToCloud implements ShouldQueue
                             'data'   => $records->toArray()
                         ]);
 
+                    // Structured JSON log for the report
                     Log::info("SYNC_UPLOAD_REPORT", [
-                        'table'    => $table,
-                        'status'   => $response->status(),
-                        'count'    => $records->count(),
-                        'ok'       => $response->successful(),
-                        'response' => $response->json()
+                        'table'  => $table,
+                        'status' => $response->status(),
+                        'count'  => $records->count(),
+                        'ok'     => $response->successful()
                     ]);
 
                     if ($response->successful()) {
+                        // Mark records as synced in local database
                         DB::connection($conn)
                             ->table($table)
                             ->whereIn($pk, $records->pluck($pk))
@@ -81,6 +95,9 @@ class SyncDataToCloud implements ShouldQueue
             });
     }
 
+    /**
+     * Download: Fetch records from Cloud and save/update in Local database.
+     */
     private function downloadFromCloud($config, $url, $key)
     {
         $table = $config['table'];
@@ -88,9 +105,8 @@ class SyncDataToCloud implements ShouldQueue
         $pk = $config['pk'];
 
         try {
-            // Added withoutVerifying() to fix cURL error 77
-            $response = Http::withoutVerifying() 
-                ->withHeaders(['X-Sync-Key' => $key])
+            // Execute GET request
+            $response = Http::withHeaders(['X-Sync-Key' => $key])
                 ->get($url, [
                     'action' => 'download',
                     'table'  => $table
@@ -110,10 +126,14 @@ class SyncDataToCloud implements ShouldQueue
                 $cloudRecords = $response->json()['data'];
 
                 foreach ($cloudRecords as $record) {
+                    // Convert to array to handle key access safely
                     $recordArray = (array)$record;
+                    
+                    // Mark as synced locally
                     $recordArray['is_synced'] = 1;
                     $recordArray['last_synced_at'] = now();
 
+                    // Check if PK exists in record before performing Upsert
                     if (isset($recordArray[$pk])) {
                         DB::connection($conn)
                             ->table($table)
