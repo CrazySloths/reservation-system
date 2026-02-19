@@ -201,15 +201,11 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($facilities as $facility)
-                        @php
-                            $photos = $facility->relationLoaded('photos') ? $facility->photos : collect();
-                            $photo = $photos->where('is_primary', true)->first() ?? $photos->first();
-                        @endphp
-                        <div onclick="openFacilityModal({{ $facility->id }})"
+                        <div onclick="openFacilityModal({{ $facility->facility_id }})"
                             class="facility-card relative group rounded-[2.5rem] overflow-hidden aspect-[4/5] bg-slate-900 shadow-2xl cursor-pointer">
-                            @if($photo)
-                                <img src="{{ asset($photo->photo_path) }}"
-                                    alt="{{ $facility->facility_name }}"
+                            @if($facility->image_path)
+                                <img src="{{ url('/files/' . $facility->image_path) }}"
+                                    alt="{{ $facility->name }}"
                                     class="w-full h-full object-cover transition duration-700">
                             @else
                                 <div class="w-full h-full flex items-center justify-center bg-slate-800">
@@ -220,8 +216,8 @@
                                 class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 transition duration-500">
                             </div>
                             <div class="absolute bottom-0 left-0 p-8">
-                                <h3 class="text-2xl font-bold mb-1">{{ $facility->facility_name }}</h3>
-                                <p class="text-white/60 text-xs mb-4 uppercase tracking-widest">{{ ucwords(str_replace('_', ' ', $facility->facility_type)) }}</p>
+                                <h3 class="text-2xl font-bold mb-1">{{ $facility->name }}</h3>
+                                <p class="text-white/60 text-xs mb-4 uppercase tracking-widest">{{ $facility->lguCity?->city_name ?? $facility->city ?? '' }}</p>
                                 <span
                                     class="text-[10px] font-bold bg-orange-600 px-3 py-1 rounded-full uppercase tracking-tighter">View
                                     Details</span>

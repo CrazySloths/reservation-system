@@ -29,9 +29,9 @@ use App\Http\Controllers\Admin\SystemSettingsController;
 
 Route::get('/', function () {
     try {
-        $facilities = \App\Models\Facility::with(['location', 'photos'])
-            ->active()
-            ->ordered()
+        $facilities = \App\Models\FacilityDb::with('lguCity')
+            ->where('is_available', true)
+            ->orderBy('name')
             ->get();
     } catch (\Throwable $e) {
         $facilities = collect();
@@ -40,16 +40,14 @@ Route::get('/', function () {
     // Pre-build modal data safely so blade rendering can't crash
     $facilitiesJson = $facilities->mapWithKeys(function($facility) {
         try {
-            $photos = $facility->relationLoaded('photos') ? $facility->photos : collect();
-            $photo = $photos->where('is_primary', true)->first() ?? $photos->first();
-            return [$facility->id => [
-                'title' => $facility->facility_name ?? 'Unnamed Facility',
-                'location' => $facility->location?->location_name ?? 'N/A',
+            return [$facility->facility_id => [
+                'title' => $facility->name ?? 'Unnamed Facility',
+                'location' => $facility->lguCity?->city_name ?? $facility->city ?? 'N/A',
                 'capacity' => number_format((int)($facility->capacity ?? 0)) . ' pax',
                 'rate' => $facility->base_rate_3hrs ? '₱' . number_format((float)$facility->base_rate_3hrs, 2) : 'N/A',
                 'extRate' => $facility->hourly_rate ? '₱' . number_format((float)$facility->hourly_rate, 2) . '/hr' : 'N/A',
-                'hours' => $facility->min_booking_hours ? $facility->min_booking_hours . ' Hours' : '3 Hours',
-                'img' => $photo ? asset($photo->photo_path) : null,
+                'hours' => '3 Hours',
+                'img' => $facility->image_path ? url('/files/' . $facility->image_path) : null,
                 'desc' => $facility->description ?? 'No description available.',
             ]];
         } catch (\Throwable $e) {
