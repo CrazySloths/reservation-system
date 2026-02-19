@@ -202,7 +202,8 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     @foreach($facilities as $facility)
                         @php
-                            $photo = $facility->photos->where('is_primary', true)->first() ?? $facility->photos->first();
+                            $photos = $facility->relationLoaded('photos') ? $facility->photos : collect();
+                            $photo = $photos->where('is_primary', true)->first() ?? $photos->first();
                         @endphp
                         <div onclick="openFacilityModal({{ $facility->id }})"
                             class="facility-card relative group rounded-[2.5rem] overflow-hidden aspect-[4/5] bg-slate-900 shadow-2xl cursor-pointer">
@@ -302,7 +303,8 @@
 
         // Modals Script — built dynamically from DB
         const facilitiesData = @json($facilities->mapWithKeys(function($facility) {
-            $photo = $facility->photos->where('is_primary', true)->first() ?? $facility->photos->first();
+            $photos = $facility->relationLoaded('photos') ? $facility->photos : collect();
+            $photo = $photos->where('is_primary', true)->first() ?? $photos->first();
             return [$facility->id => [
                 'title' => $facility->facility_name,
                 'location' => $facility->location->location_name ?? 'N/A',

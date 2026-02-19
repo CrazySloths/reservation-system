@@ -28,10 +28,16 @@ use App\Http\Controllers\Admin\SystemSettingsController;
 //})->name('login');
 
 Route::get('/', function () {
-    $facilities = \App\Models\Facility::with(['location', 'photos'])
+    $facilities = \App\Models\Facility::with(['location'])
         ->active()
         ->ordered()
         ->get();
+    // Try to load photos if the table exists
+    try {
+        $facilities->load('photos');
+    } catch (\Exception $e) {
+        // facility_photos table may not exist yet
+    }
     return view('welcome', compact('facilities'));
 })->name('welcome');
 
