@@ -13,7 +13,7 @@ class FacilityController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Facility::with(['location']) // Photos disabled - table not created yet
+        $query = Facility::with(['location', 'photos'])
             ->active()
             ->ordered();
 
@@ -68,12 +68,9 @@ class FacilityController extends Controller
     {
         $facility = Facility::with([
             'location',
-            // 'photos' => function($query) {
-            //     $query->orderBy('display_order');
-            // },
-            // 'equipment' => function($query) {
-            //     $query->where('is_available', true);
-            // }
+            'photos' => function($query) {
+                $query->orderBy('display_order');
+            },
         ])
         ->where('status', 'active')
         ->findOrFail($id);

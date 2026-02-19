@@ -135,12 +135,10 @@ class Facility extends Model
 
     /**
      * Get primary photo for the facility
-     * Note: Temporarily disabled until facility_photos table is created
      */
     public function getPrimaryPhotoAttribute()
     {
-        // return $this->photos()->where('is_primary', true)->first();
-        return null; // Return null until photos table is created
+        return $this->photos()->where('is_primary', true)->first();
     }
 
     /**

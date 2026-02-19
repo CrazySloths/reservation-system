@@ -29,11 +29,10 @@ use App\Http\Controllers\Admin\SystemSettingsController;
 
 Route::get('/', function () {
     try {
-        $facilities = \App\Models\Facility::with(['location'])
+        $facilities = \App\Models\Facility::with(['location', 'photos'])
             ->active()
             ->ordered()
             ->get();
-        try { $facilities->load('photos'); } catch (\Throwable $e) {}
     } catch (\Throwable $e) {
         $facilities = collect();
     }
