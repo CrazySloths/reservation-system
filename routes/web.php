@@ -45,7 +45,7 @@ Route::get('/', function () {
                 'location' => $facility->lguCity?->city_name ?? $facility->city ?? 'N/A',
                 'capacity' => number_format((int)($facility->capacity ?? 0)) . ' pax',
                 'rate' => $facility->base_rate_3hrs ? '₱' . number_format((float)$facility->base_rate_3hrs, 2) : 'N/A',
-                'extRate' => $facility->hourly_rate ? '₱' . number_format((float)$facility->hourly_rate, 2) . '/hr' : 'N/A',
+                'extRate' => $facility->extension_rate_2hrs ? '₱' . number_format((float)$facility->extension_rate_2hrs, 2) . '/2hrs' : 'N/A',
                 'hours' => '3 Hours',
                 'img' => $facility->image_path ? url('/files/' . $facility->image_path) : null,
                 'desc' => $facility->description ?? 'No description available.',
