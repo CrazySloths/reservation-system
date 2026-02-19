@@ -28,7 +28,11 @@ use App\Http\Controllers\Admin\SystemSettingsController;
 //})->name('login');
 
 Route::get('/', function () {
-    return view('welcome');
+    $facilities = \App\Models\Facility::with(['location', 'photos'])
+        ->active()
+        ->ordered()
+        ->get();
+    return view('welcome', compact('facilities'));
 })->name('welcome');
 
 // Storage file access route (for shared hosting where /storage/ conflicts with real directory)

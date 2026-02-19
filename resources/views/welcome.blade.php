@@ -199,54 +199,34 @@
 
                 <!-- Facility Cards Grid -->
 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div onclick="openFacilityModal('buena')"
-                        class="facility-card relative group rounded-[2.5rem] overflow-hidden aspect-[4/5] bg-slate-900 shadow-2xl cursor-pointer">
-                        <img src="{{ asset('Images/Buena_Park_Caloocan.jpg') }}"
-                            class="w-full h-full object-cover transition duration-700">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 transition duration-500">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    @foreach($facilities as $facility)
+                        @php
+                            $photo = $facility->photos->where('is_primary', true)->first() ?? $facility->photos->first();
+                        @endphp
+                        <div onclick="openFacilityModal({{ $facility->id }})"
+                            class="facility-card relative group rounded-[2.5rem] overflow-hidden aspect-[4/5] bg-slate-900 shadow-2xl cursor-pointer">
+                            @if($photo)
+                                <img src="{{ asset($photo->photo_path) }}"
+                                    alt="{{ $facility->facility_name }}"
+                                    class="w-full h-full object-cover transition duration-700">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center bg-slate-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-white/20"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+                                </div>
+                            @endif
+                            <div
+                                class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 transition duration-500">
+                            </div>
+                            <div class="absolute bottom-0 left-0 p-8">
+                                <h3 class="text-2xl font-bold mb-1">{{ $facility->facility_name }}</h3>
+                                <p class="text-white/60 text-xs mb-4 uppercase tracking-widest">{{ ucwords(str_replace('_', ' ', $facility->facility_type)) }}</p>
+                                <span
+                                    class="text-[10px] font-bold bg-orange-600 px-3 py-1 rounded-full uppercase tracking-tighter">View
+                                    Details</span>
+                            </div>
                         </div>
-                        <div class="absolute bottom-0 left-0 p-8">
-                            <h3 class="text-2xl font-bold mb-1">Buena Park</h3>
-                            <p class="text-white/60 text-xs mb-4 uppercase tracking-widest">Clubhouse & Events</p>
-                            <span
-                                class="text-[10px] font-bold bg-orange-600 px-3 py-1 rounded-full uppercase tracking-tighter">View
-                                Details</span>
-                        </div>
-                    </div>
-
-                    <div onclick="openFacilityModal('sports')"
-                        class="facility-card relative group rounded-[2.5rem] overflow-hidden aspect-[4/5] bg-slate-900 shadow-2xl cursor-pointer">
-                        <img src="{{ asset('Images/Caloocan_Sports_Complex.jpg') }}"
-                            class="w-full h-full object-cover transition duration-700">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 transition duration-500">
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-8">
-                            <h3 class="text-2xl font-bold mb-1">Sports Complex</h3>
-                            <p class="text-white/60 text-xs mb-4 uppercase tracking-widest">Indoor Courts</p>
-                            <span
-                                class="text-[10px] font-bold bg-orange-600 px-3 py-1 rounded-full uppercase tracking-tighter">View
-                                Details</span>
-                        </div>
-                    </div>
-
-                    <div onclick="openFacilityModal('mice')"
-                        class="facility-card relative group rounded-[2.5rem] overflow-hidden aspect-[4/5] bg-slate-900 shadow-2xl cursor-pointer">
-                        <img src="{{ asset('Images/MICE_Center_QC.jpg') }}"
-                            class="w-full h-full object-cover transition duration-700">
-                        <div
-                            class="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-90 transition duration-500">
-                        </div>
-                        <div class="absolute bottom-0 left-0 p-8">
-                            <h3 class="text-2xl font-bold mb-1">M.I.C.E. Center</h3>
-                            <p class="text-white/60 text-xs mb-4 uppercase tracking-widest">Conventions & Expos</p>
-                            <span
-                                class="text-[10px] font-bold bg-orange-600 px-3 py-1 rounded-full uppercase tracking-tighter">View
-                                Details</span>
-                        </div>
-                    </div>
+                    @endforeach
                 </div>
             </div>
         </section>
@@ -320,39 +300,20 @@
 
     <script>
 
-        // Modals Script
-        const facilitiesData = {
-            buena: {
-                title: "Buena Park",
-                location: "Caloocan City",
-                capacity: "800 pax",
-                rate: "₱5,000.00",
-                extRate: "₱2,000/hr",
-                hours: "3 Hours",
-                img: "{{ asset('Images/Buena_Park_Caloocan.jpg') }}",
-                desc: "Open-air community park suitable for outdoor gatherings and events. Perfect for weekend private events and community celebrations."
-            },
-            sports: {
-                title: "Sports Complex",
-                location: "Caloocan City",
-                capacity: "3,000 pax",
-                rate: "₱18,000.00",
-                extRate: "₱7,000/hr",
-                hours: "3 Hours",
-                img: "{{ asset('Images/Caloocan_Sports_Complex.jpg') }}",
-                desc: "Multi-purpose indoor sports facility for athletic events and large gatherings. Ideal for tournaments, competitions, and sporting events."
-            },
-            mice: {
-                title: "M.I.C.E. Center",
-                location: "Quezon City",
-                capacity: "1,200 pax",
-                rate: "₱20,000.00",
-                extRate: "₱8,000/hr",
-                hours: "4 Hours",
-                img: "{{ asset('Images/MICE_Center_QC.jpg') }}",
-                desc: "Large-scale venue for conventions, exhibits, and major events. Professional-grade 4-storey M.I.C.E. Center facility. Currently restricted to QC-LGU departments pending ordinance approval for public use."
-            }
-        };
+        // Modals Script — built dynamically from DB
+        const facilitiesData = @json($facilities->mapWithKeys(function($facility) {
+            $photo = $facility->photos->where('is_primary', true)->first() ?? $facility->photos->first();
+            return [$facility->id => [
+                'title' => $facility->facility_name,
+                'location' => $facility->location->location_name ?? 'N/A',
+                'capacity' => number_format($facility->capacity) . ' pax',
+                'rate' => $facility->base_rate_3hrs ? '₱' . number_format($facility->base_rate_3hrs, 2) : 'N/A',
+                'extRate' => $facility->hourly_rate ? '₱' . number_format($facility->hourly_rate, 2) . '/hr' : 'N/A',
+                'hours' => $facility->min_booking_hours ? $facility->min_booking_hours . ' Hours' : '3 Hours',
+                'img' => $photo ? asset($photo->photo_path) : null,
+                'desc' => $facility->description ?? 'No description available.',
+            ]];
+        }));
 
         const loginUrl = "{{ route('login') }}";
 
@@ -362,8 +323,11 @@
             Swal.fire({
                 html: `
                     <div style="display:grid;grid-template-columns:1fr 1fr;text-align:left;gap:0;min-height:380px;">
-                        <div style="overflow:hidden;">
-                            <img src="${data.img}" style="width:100%;height:100%;object-fit:cover;" alt="${data.title}">
+                        <div style="overflow:hidden;background:#1e293b;display:flex;align-items:center;justify-content:center;">
+                            ${data.img
+                                ? `<img src="${data.img}" style="width:100%;height:100%;object-fit:cover;" alt="${data.title}">`
+                                : `<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>`
+                            }
                         </div>
                         <div style="padding:2rem 2.5rem;display:flex;flex-direction:column;gap:1.25rem;">
                             <div>
