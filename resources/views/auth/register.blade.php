@@ -64,23 +64,8 @@
         <!-- Hidden field for AI verification data -->
         <input type="hidden" id="ai_verification_data" name="ai_verification_data" value="">
 
-        <!-- Registration Type Selection -->
-        <div class="mb-4">
-            <label for="registration_type" class="form-label" style="color: var(--headline); font-family: 'Merriweather', serif; font-weight: 700;"><i class="bi bi-person-check"></i> Registration Type</label>
-            <div class="input-group">
-                <span class="input-group-text"><i class="bi bi-list-ul"></i></span>
-                <select class="form-control" id="registration_type" name="registration_type" required>
-                    <option value="facility_user" selected>Citizen - Public facilities reservation</option>
-                    <option value="applicant">Housing Applicant - Housing & resettlement programs</option>
-                    <option value="utility_customer">Utility Customer - Water & electricity billing</option>
-                    <option value="land_citizen">Citizen - Land Registration and Titling System</option>
-                    <option value="resident">Resident - Community infrastructure maintenance</option>
-                    <option value="road_resident">Resident - Road and Transportation Infrastructure Monitoring</option>
-                    <option value="property_owner">Property Owner - Urban Planning & Development</option>
-                </select>
-            </div>
-            <small class="text-muted">Select the type that best describes your primary need for LGU services</small>
-        </div>
+        <!-- Registration Type (auto-assigned to Public Facilities Reservation) -->
+        <input type="hidden" name="registration_type" value="facility_user">
 
         <!-- Step 1: Account Information -->
         <div class="step" x-show="currentStep === 1" x-cloak>
